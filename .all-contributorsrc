@@ -1,0 +1,51 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "Curt-Park",
+      "name": "Jinwoo Park (Curt)",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/14961526?v=4",
+      "profile": "https://github.com/Curt-Park",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "Hoonyyhoon",
+      "name": "Junghoon Kim",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/25141842?v=4",
+      "profile": "https://github.com/Hoonyyhoon",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "HSShin0",
+      "name": "Hyungseok Shin",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/44793742?v=4",
+      "profile": "https://github.com/HSShin0",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "Ingenjoy",
+      "name": "Juhee Lee",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/18753708?v=4",
+      "profile": "https://www.linkedin.com/in/juhee-lee-393342126/",
+      "contributions": [
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "model_compression",
+  "projectOwner": "j-marple-dev",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}
