@@ -240,7 +240,8 @@ class Trainer(Runner):
         self.model.train()
         l1_criterion = nn.L1Loss()
         # trainloaders contain same length(iteration) of batch dataset
-        for i, sample_batched in enumerate(self.trainloader):
+        #for i, sample_batched in enumerate(self.trainloader):
+        for sample_batched in progressbar(self.trainloader, prefix="[Train]\t"):
             
             self.optimizer.zero_grad()
 
