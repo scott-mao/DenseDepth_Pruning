@@ -143,10 +143,10 @@ def getDefaultTrainTransform():
         ToTensor()
     ])
 
-def getTrainingTestingData(batch_size):
+def getTrainingTestingData(batch_size, batch_size_2):
     data, nyu2_train = loadZipToMem('nyu_data.zip')
 
     transformed_training = depthDatasetMemory(data, nyu2_train, transform=getDefaultTrainTransform())
     transformed_testing = depthDatasetMemory(data, nyu2_train, transform=getNoTransform())
 
-    return DataLoader(transformed_training, batch_size, shuffle=True), DataLoader(transformed_testing, batch_size, shuffle=False)
+    return DataLoader(transformed_training, batch_size, shuffle=True), DataLoader(transformed_testing, batch_size_2, shuffle=False)

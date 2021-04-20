@@ -93,7 +93,7 @@ def get_dataset(
     
     # Densedepth dataset
     from src.densedepth_data import getTrainingTestingData
-    train_loader, test_loader = getTrainingTestingData(batch_size = 2)
+    train_loader, test_loader = getTrainingTestingData(10,40)
 
     return train_loader, test_loader
 

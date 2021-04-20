@@ -111,7 +111,7 @@ class Trainer(Runner):
                 **config["CUTMIX"],
             )
 
-        self.trainloader, self.testloader = getTrainingTestingData(batch_size = 2)
+        self.trainloader, self.testloader = getTrainingTestingData(10, 40)
         # get dataloaders
         # self.trainloader, self.testloader = utils.get_dataloader(
         #     trainset,
@@ -188,22 +188,23 @@ class Trainer(Runner):
         """Train one epoch and run testing and logging."""
         self.lr_scheduler(self.optimizer, epoch)
 
+        
         # train
         train_loss, train_stat = self.train_one_epoch()
 
         # test
-        try:
-            test_loss, test_stat = self.test_one_epoch()
+        test_loss, test_stat = self.test_one_epoch()
+        
 
 
-            # save all params that showed the best acc
-            test_acc = test_stat["model_acc"]
-            if test_acc > self.best_acc:
-                self.best_acc = test_acc
-                filename = str(epoch) + "_" + f"{self.best_acc:.2f}".replace(".", "_")
-                self.save_params(self.model_save_dir, filename, epoch)
-        except:
-            pass
+        # save all params that showed the best acc
+
+        test_acc = test_stat["model_acc"]
+        if test_acc > self.best_acc:
+            self.best_acc = test_acc
+            filename = str(epoch) + "_" + f"{self.best_acc:.2f}".replace(".", "_")
+            self.save_params(self.model_save_dir, filename, epoch)
+    
         # log
         if not extra_log_info:
             extra_log_info = []
@@ -356,10 +357,11 @@ class Trainer(Runner):
     def test_one_epoch_model(self, model: nn.Module) -> Tuple[float, Dict[str, float]]:
         """Test the input model."""
         losses = []
+        l1_criterion = nn.L1Loss()
         model.eval()
 
         # testloaders contain same length(iteration) of batch dataset
-        for data in progressbar(self.testloader, prefix="[Test]\t"):
+        for sample_batched in progressbar(self.testloader, prefix="[Test]\t"):
             image = torch.autograd.Variable(sample_batched['image'].cuda())
             depth = torch.autograd.Variable(sample_batched['depth'].cuda(non_blocking=True))
             maxDepth = 1000.0
@@ -382,7 +384,7 @@ class Trainer(Runner):
 
             # forward + backward + optimize
             
-            self._count_correct_prediction(outputs, depth_n)
+            self._count_correct_prediction(output, depth_n)
             losses.append(loss.item())
 
         avg_loss = sum(losses) / len(losses)
