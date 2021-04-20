@@ -64,4 +64,4 @@ trainer = Trainer(
     device=device,
     half=args.half,
 )
-trainer.run(args.resume)
+trainer.test_ond_epoch()

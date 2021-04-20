@@ -53,10 +53,13 @@ pruner = Pruner(
     wandb_init_params=wandb_init_params,
     device=device,
 )
+from src.runners.trainer import Trainer
+
 if args.test_weight:
     if not args.test_weight.startswith(args.resume):
         raise Exception(f"{args.test_weight} from {args.resume} ?")
     pruner.test(args.test_weight)
 else:
     pruner.run(args.resume)
-    #pruner.test()
+    
+
