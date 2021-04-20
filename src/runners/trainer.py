@@ -357,19 +357,50 @@ class Trainer(Runner):
 
         # testloaders contain same length(iteration) of batch dataset
         for data in progressbar(self.testloader, prefix="[Test]\t"):
-            images, labels = data[0].to(self.device), data[1].to(self.device)
+            image = torch.autograd.Variable(sample_batched['image'].cuda())
+            depth = torch.autograd.Variable(sample_batched['depth'].cuda(non_blocking=True))
+            maxDepth = 1000.0
+            depth_n = maxDepth/depth
+            #No use self.criterion 
+
+            output = self.model(image)
+            # Compute the loss
+
+            l_depth = l1_criterion(output, depth_n)
+
+            l_ssim = torch.clamp((1 - ssim(output, depth_n, val_range = 1000.0 / 10.0)) * 0.5, 0, 1)
+
+            loss = (1.0 * l_ssim) + (0.1 * l_depth)
+
+            
 
             if self.half:
                 images = images.half()
 
             # forward + backward + optimize
-            loss, outputs = self.criterion(model, images=images, labels=labels)
-            self._count_correct_prediction(outputs, labels)
+            
+            self._count_correct_prediction(outputs, depth_n)
             losses.append(loss.item())
 
         avg_loss = sum(losses) / len(losses)
         acc = self._get_epoch_acc(is_test=True)
         return avg_loss, acc
+
+        # # testloaders contain same length(iteration) of batch dataset
+        # for data in progressbar(self.testloader, prefix="[Test]\t"):
+        #     images, labels = data[0].to(self.device), data[1].to(self.device)
+
+        #     if self.half:
+        #         images = images.half()
+
+        #     # forward + backward + optimize
+        #     loss, outputs = self.criterion(model, images=images, labels=labels)
+        #     self._count_correct_prediction(outputs, labels)
+        #     losses.append(loss.item())
+
+        # avg_loss = sum(losses) / len(losses)
+        # acc = self._get_epoch_acc(is_test=True)
+        # return avg_loss, acc
 
     @torch.no_grad()
     def warmup_one_iter(self) -> None:

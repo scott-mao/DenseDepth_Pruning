@@ -59,3 +59,4 @@ if args.test_weight:
     pruner.test(args.test_weight)
 else:
     pruner.run(args.resume)
+    #pruner.test()

@@ -225,25 +225,25 @@ class Pruner(Runner):
 
         # original_state_dict = copy.deepcopy(self.model.state_dict())
 
-        # state_dict = torch.load(weight_path)["state_dict"]
-        # self.model.load_state_dict(state_dict)
-        # t0 = time.time()
-        # with profiler.profile(record_shapes = True) as prof:
-        #     with profiler.record_function("model_inference"):
-        #         avg_loss, acc = self.trainer.test_one_epoch_model(self.model)
-
-        # print(f"Inference time: {time.time() - t0:.2f} sec")
-        # print(f"Average loss: {avg_loss:.4f}\t Accuracy: {acc}")
-        # print(prof.key_averages().table(sort_by="cpu_time_total", row_limit=10))
-        # self.model.load_state_dict(original_state_dict)
-        
-        # For Shrink model
-        load_model = torch.load(weight_path)
-        load_model.eval()
-        print("Shrink model loaded")
+        state_dict = torch.load(weight_path)["state_dict"]
+        self.model.load_state_dict(state_dict)
+        t0 = time.time()
         with profiler.profile(record_shapes = True) as prof:
             with profiler.record_function("model_inference"):
-                avg_loss, acc = self.trainer.test_one_epoch_model(load_model)
+                avg_loss, acc = self.trainer.test_one_epoch_model(self.model)
+
+        print(f"Inference time: {time.time() - t0:.2f} sec")
+        print(f"Average loss: {avg_loss:.4f}\t Accuracy: {acc}")
+        print(prof.key_averages().table(sort_by="cpu_time_total", row_limit=10))
+        self.model.load_state_dict(original_state_dict)
+        
+        # For Shrink model
+        # load_model = torch.load(weight_path)
+        # load_model.eval()
+        # print("Shrink model loaded")
+        # with profiler.profile(record_shapes = True) as prof:
+        #     with profiler.record_function("model_inference"):
+        #         avg_loss, acc = self.trainer.test_one_epoch_model(load_model)
         print(prof.key_averages().table(sort_by="cpu_time_total", row_limit=10))
     def run(self, resume_info_path: str = "") -> None:
         """Run pruning."""
